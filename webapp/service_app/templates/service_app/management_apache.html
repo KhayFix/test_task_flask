@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Management {{title}}
+{% endblock %}
+
+{%  block content_title %}
+    Application management {{title.capitalize()}}
+{% endblock %}
+
+{% block content %}
+    Service_name = {{ title.capitalize() }}
+    <div class="mt-2">
+        {% if service_state %}
+            <span class="badge badge-success">Сервис работает</span>
+        {% elif service_state == False %}
+            <span class="badge badge-danger">Сервис остановлен</span>
+        {% elif service_state == None %}
+            <span class="badge badge-warning">Сервис не найден</span>
+        {% else %}
+            <span class="badge badge-danger">Ошибка</span>
+        {% endif %}
+
+        <form class="form-enable" action="{{ url_for('service.process_service_apache') }}" method="POST">
+            <div class="form-group mt-2" >
+                {{ form.checkbox.label(class_='form-check-label', type='submit') }}
+                {{ form.checkbox() }}
+
+                <div class="form-btn col-md mt-2" >
+                    {{ form.submit_start() }}
+                    {{ form.submit_stop() }}
+                    {{ form.submit_restart() }}
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
