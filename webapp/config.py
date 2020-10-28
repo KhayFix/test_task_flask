@@ -3,7 +3,7 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Поместите ваш пароль от пользователя linux в .bash_profile, или введите его вручную в USER_PASSWORD
+# Поместите ваш пароль от пользователя linux в .profile, или введите его вручную в USER_PASSWORD
 USER_PASSWORD: str = os.environ.get("USER_PASSWORD")
 
 
