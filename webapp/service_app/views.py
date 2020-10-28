@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, url_for, request
 from flask import render_template
 
 from webapp.service_app.forms import ServiceAppForm
-from webapp.service_app.demon_control.service_management import service_running
+from webapp.service_app.demon_control.service_management import service_app
 
 blueprint = Blueprint('service', __name__, template_folder='templates', )
 
@@ -19,7 +19,8 @@ def service_apache():
     """
     title = "apache2"
     form = ServiceAppForm()
-    output = service_running(command='status', name_app=title)
+
+    output = service_app.running(command='status', name_app=title)
 
     return render_template('service_app/management_apache.html', title=title,
                            service_state=output, form=form)
@@ -32,7 +33,7 @@ def process_service_apache():
         buttons_data = request.form.to_dict()
         button_value = [value for value in buttons_data.values()][-1]
 
-        output = service_running(command=f'{button_value.lower()}', name_app=title)
+        service_app.running(command=f'{button_value.lower()}', name_app=title)
     return redirect(url_for('service.service_apache'))
 
 
