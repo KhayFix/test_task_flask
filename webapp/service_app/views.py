@@ -37,6 +37,14 @@ def process_service_apache():
     return redirect(url_for('service.service_apache'))
 
 
+@blueprint.route('/state-checkbox', methods=["POST"])
+def state_checkbox():
+    if request.method == "POST":
+        state_chk: bool = request.json['chk']
+        print(state_chk)
+    return redirect(False)
+
+
 @blueprint.route('/asterisk')
 def service_asterisk():
     title = "Service_name = asterisk"
