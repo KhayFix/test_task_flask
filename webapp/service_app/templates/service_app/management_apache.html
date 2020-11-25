@@ -41,7 +41,7 @@ Service_name = {{ title.capitalize() }}
 
         if (chk.tagName === 'INPUT' && chk.id === 'id_checkbox') {
             checkbox_click();
-            console.log("%s %s", chk.name, chk.checked)
+            send_data(chk.checked);
         }
     });
 
@@ -54,5 +54,17 @@ Service_name = {{ title.capitalize() }}
             }
         });
     }
+
+    function send_data(text_checkbox) {
+        /*  отправка состяния чекбокса на сервер */
+        let data = {
+            'chk': text_checkbox,
+        };
+        let json = JSON.stringify(data);
+        let request = new XMLHttpRequest();
+        request.open("POST", "{{ url_for('service.state_checkbox') }}");
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        request.send(json);
+        }
 </script>
 {% endblock %}
