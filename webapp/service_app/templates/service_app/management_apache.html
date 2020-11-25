@@ -1,38 +1,71 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Management {{title}}
+Management {{title}}
 {% endblock %}
 
 {%  block content_title %}
-    Application management {{title.capitalize()}}
+Application management {{title.capitalize()}}
 {% endblock %}
 
 {% block content %}
-    Service_name = {{ title.capitalize() }}
-    <div class="mt-2">
-        {% if service_state == 0 %}
-            <span class="badge badge-success">Сервис работает</span>
-        {% elif service_state == 3 %}
-            <span class="badge badge-danger">Сервис остановлен</span>
-        {% elif service_state == 4 %}
-            <span class="badge badge-warning">Сервис не найден</span>
-        {% else %}
-            <span class="badge badge-danger">Ошибка</span>
-        {% endif %}
+Service_name = {{ title.capitalize() }}
+<div class="mt-2">
+    {% if service_state == 0 %}
+    <span class="badge badge-success">Сервис работает</span>
+    {% elif service_state == 3 %}
+    <span class="badge badge-danger">Сервис остановлен</span>
+    {% elif service_state == 4 %}
+    <span class="badge badge-warning">Сервис не найден</span>
+    {% else %}
+    <span class="badge badge-danger">Ошибка</span>
+    {% endif %}
 
-        <form class="form-enable" action="{{ url_for('service.process_service_apache') }}" method="POST">
-            <div class="form-group mt-2" >
-                {{ form.checkbox.label(class_='form-check-label', type='submit') }}
-                {{ form.checkbox() }}
+    <form class="form-enable" action="{{ url_for('service.process_service_apache') }}" method="POST">
+        <div class="form-group mt-2">
+            {{ form.checkbox.label(class_='form-check-label', type='submit') }}
+            {{ form.checkbox() }}
 
-                <div class="form-btn col-md mt-2" >
-                    {{ form.submit_start() }}
-                    {{ form.submit_stop() }}
-                    {{ form.submit_restart() }}
-                </div>
+            <div class="form-btn col-md mt-2">
+                {{ form.submit_start() }}
+                {{ form.submit_stop() }}
+                {{ form.submit_restart() }}
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
+<script>
 
+    document.addEventListener('change', function () {
+        var chk = event.target
+
+        if (chk.tagName === 'INPUT' && chk.id === 'id_checkbox') {
+            checkbox_click();
+            send_data(chk.checked);
+        }
+    });
+
+    function checkbox_click() {
+        $('#id_checkbox').on('change', function () {
+            if ($('#id_checkbox').prop('checked')) {
+                $('.btn').attr('disabled', false);
+            } else {
+                $('.btn').attr('disabled', true);
+            }
+        });
+    }
+
+    function send_data(text_checkbox) {
+        /*  отправка состояния чекбокса на сервер */
+        let data = {
+            'chk': text_checkbox,
+        };
+        let json = JSON.stringify(data);
+        let request = new XMLHttpRequest();
+        request.open("POST", "{{ url_for('service.state_checkbox') }}");
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        request.send(json);
+    }
+
+</script>
 {% endblock %}
