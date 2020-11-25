@@ -65,6 +65,7 @@ Service_name = {{ title.capitalize() }}
         request.open("POST", "{{ url_for('service.state_checkbox') }}");
         request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         request.send(json);
-        }
+    }
+
 </script>
 {% endblock %}
