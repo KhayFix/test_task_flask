@@ -37,22 +37,24 @@ Service_name = {{ title.capitalize() }}
 <script>
 
     document.addEventListener('change', function () {
-        var chk = event.target
+        let chk = event.target
 
         if (chk.tagName === 'INPUT' && chk.id === 'id_checkbox') {
-            checkbox_click();
+            checkbox_click(chk);
             send_data(chk.checked);
         }
     });
 
-    function checkbox_click() {
-        $('#id_checkbox').on('change', function () {
-            if ($('#id_checkbox').prop('checked')) {
-                $('.btn').attr('disabled', false);
+    function checkbox_click(chk) {
+        const button = document.querySelectorAll('.btn-sm');
+
+        for (let btn of button) {
+            if (chk.checked) {
+                btn.removeAttribute('disabled')
             } else {
-                $('.btn').attr('disabled', true);
+                btn.setAttribute("disabled", "disabled")
             }
-        });
+        }
     }
 
     function send_data(text_checkbox) {
