@@ -24,7 +24,7 @@ Service_name = {{ title.capitalize() }}
     <form class="form-enable" action="{{ url_for('service.process_service_apache') }}" method="POST">
         <div class="form-group mt-2">
             {{ form.checkbox.label(class_='form-check-label', type='submit') }}
-            {{ form.checkbox() }}
+            {{ form.checkbox(checked=chk.bool_state) }}
 
             <div class="form-btn col-md mt-2">
                 {{ form.submit_start() }}
