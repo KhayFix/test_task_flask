@@ -40,12 +40,12 @@ Service_name = {{ title.capitalize() }}
         let chk = event.target
 
         if (chk.tagName === 'INPUT' && chk.id === 'id_checkbox') {
-            checkbox_click(chk);
-            send_data(chk.checked);
+            checkboxClick(chk);
+            sendData(chk.checked);
         }
     });
 
-    function checkbox_click(chk) {
+    function checkboxClick(chk) {
         const button = document.querySelectorAll('.btn-sm');
 
         for (let btn of button) {
@@ -57,7 +57,7 @@ Service_name = {{ title.capitalize() }}
         }
     }
 
-    function send_data(text_checkbox) {
+    function sendData(text_checkbox) {
         /*  отправка состояния чекбокса на сервер */
         let data = {
             'chk': text_checkbox,
