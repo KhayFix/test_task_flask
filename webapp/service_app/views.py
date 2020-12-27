@@ -1,8 +1,13 @@
+from datetime import datetime
+
 from flask import Blueprint, redirect, url_for, request
 from flask import render_template
+from sqlalchemy.orm.exc import NoResultFound
 
+from webapp.db import db
 from webapp.service_app.forms import ServiceAppForm
 from webapp.service_app.demon_control.service_management import service_app
+from webapp.service_app.models import CheckboxState
 
 blueprint = Blueprint('service', __name__, template_folder='templates', )
 
@@ -19,11 +24,12 @@ def service_apache():
     """
     title = "apache2"
     form = ServiceAppForm()
-
+    checkbox = CheckboxState.query.filter_by(id=1).first()  # Получаем состояние чекбокса из базы данных.
+    # В базе данных храниться последнее состояние чекбокса.
     output = service_app.running(command='status', name_app=title)
 
     return render_template('service_app/management_apache.html', title=title,
-                           service_state=output, form=form)
+                           service_state=output, form=form, chk=checkbox)
 
 
 @blueprint.route('/process-service-apache', methods=['GET', 'POST'])
@@ -41,7 +47,17 @@ def process_service_apache():
 def state_checkbox():
     if request.method == "POST":
         state_chk: bool = request.json['chk']
-        print(state_chk)
+        try:
+            # chk = db.session.query(CheckboxState).filter_by(id=1).one()
+            chk = CheckboxState.query.filter_by(id=1).one()
+            chk.bool_state = state_chk
+            chk.press_time = datetime.now()
+
+        except NoResultFound:
+            chk = CheckboxState(bool_state=state_chk)
+            db.session.add(chk)
+
+        db.session.commit()
     return redirect(False)
 
 

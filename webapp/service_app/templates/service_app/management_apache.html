@@ -24,7 +24,7 @@ Service_name = {{ title.capitalize() }}
     <form class="form-enable" action="{{ url_for('service.process_service_apache') }}" method="POST">
         <div class="form-group mt-2">
             {{ form.checkbox.label(class_='form-check-label', type='submit') }}
-            {{ form.checkbox() }}
+            {{ form.checkbox(checked=chk.bool_state) }}
 
             <div class="form-btn col-md mt-2">
                 {{ form.submit_start() }}
@@ -37,25 +37,27 @@ Service_name = {{ title.capitalize() }}
 <script>
 
     document.addEventListener('change', function () {
-        var chk = event.target
+        let chk = event.target
 
         if (chk.tagName === 'INPUT' && chk.id === 'id_checkbox') {
-            checkbox_click();
-            send_data(chk.checked);
+            checkboxClick(chk);
+            sendData(chk.checked);
         }
     });
 
-    function checkbox_click() {
-        $('#id_checkbox').on('change', function () {
-            if ($('#id_checkbox').prop('checked')) {
-                $('.btn').attr('disabled', false);
+    function checkboxClick(chk) {
+        const button = document.querySelectorAll('.btn-sm');
+
+        for (let btn of button) {
+            if (chk.checked) {
+                btn.removeAttribute('disabled')
             } else {
-                $('.btn').attr('disabled', true);
+                btn.setAttribute("disabled", "disabled")
             }
-        });
+        }
     }
 
-    function send_data(text_checkbox) {
+    function sendData(text_checkbox) {
         /*  отправка состояния чекбокса на сервер */
         let data = {
             'chk': text_checkbox,
